@@ -14,6 +14,9 @@ RUN conda init bash && \
     conda config --set auto_activate_base true && \
     conda config --set channel_priority strict
 
+RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+
 # Create conda environment (disable safety checks for faster build)
 RUN conda create -n sam-3d-body python=3.11 -y --solver=classic
 
