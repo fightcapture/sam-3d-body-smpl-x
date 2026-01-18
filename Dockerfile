@@ -63,8 +63,8 @@ RUN source /app/miniconda3/etc/profile.d/conda.sh && \
 # Make conda environment activate on shell start
 RUN echo "conda activate sam-3d-body" >> ~/.bashrc
 
-RUN git clone https://github.com/facebookresearch/sam-3d-body.git
-WORKDIR /app/sam-3d-body
+# RUN git clone https://github.com/facebookresearch/sam-3d-body.git
+# WORKDIR /app/sam-3d-body
 
 ARG HF_TOKEN
 RUN source /app/miniconda3/etc/profile.d/conda.sh && \
