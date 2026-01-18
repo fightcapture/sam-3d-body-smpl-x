@@ -62,7 +62,7 @@ RUN git clone https://github.com/facebookresearch/sam-3d-body.git
 WORKDIR /app/sam-3d-body
 RUN source /app/miniconda3/etc/profile.d/conda.sh && \
     conda activate sam-3d-body && \
-    huggingface-cli download facebook/sam-3d-body-dinov3 --local-dir checkpoints/sam-3d-body-dinov3
+    HF_TOKEN=${HF_TOKEN} hf download facebook/sam-3d-body-dinov3 --local-dir checkpoints/sam-3d-body-dinov3
 
 # Test CUDA availability with Python (using the conda environment)
 CMD ["/bin/bash", "-c", "source /app/miniconda3/etc/profile.d/conda.sh && conda activate sam-3d-body && python -c \"import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'CUDA device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \\\"None\\\"}')\""]
