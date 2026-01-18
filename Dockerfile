@@ -43,6 +43,14 @@ RUN source /app/miniconda3/etc/profile.d/conda.sh && \
     conda activate sam-3d-body && \
     pip install git+https://github.com/microsoft/MoGe.git
 
+RUN source /app/miniconda3/etc/profile.d/conda.sh && \
+    conda activate sam-3d-body && \
+    pip uninstall -y PyOpenGL
+
+RUN source /app/miniconda3/etc/profile.d/conda.sh && \
+    conda activate sam-3d-body && \
+    pip install git+https://github.com/mmatl/pyopengl.git
+
 # Make conda environment activate on shell start
 RUN echo "conda activate sam-3d-body" >> ~/.bashrc
 
