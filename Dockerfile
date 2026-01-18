@@ -64,7 +64,7 @@ WORKDIR /app/sam-3d-body
 ARG HF_TOKEN
 RUN source /app/miniconda3/etc/profile.d/conda.sh && \
     conda activate sam-3d-body && \
-    huggingface-cli login --token ${HF_TOKEN} && \
+    hf login --token ${HF_TOKEN} && \
     hf download facebook/sam-3d-body-dinov3 --local-dir checkpoints/sam-3d-body-dinov3
 
 # Test CUDA availability with Python (using the conda environment)
