@@ -78,7 +78,7 @@ RUN wget -P images https://www.fisu.net/app/uploads/2023/08/artistic_gym.jpg
 ENV PYOPENGL_PLATFORM=egl
 ENV MESA_GL_VERSION_OVERRIDE=4.1
 
-CMD ["/bin/bash", "-c", "source /app/miniconda3/etc/profile.d/conda.sh && conda activate sam-3d-body && python demo.py --image_folder images --output_folder outputs --checkpoint_path ./checkpoints/sam-3d-body-dinov3/model.ckpt --mhr_path ./checkpoints/sam-3d-body-dinov3/assets/mhr_model.pt"]
+CMD ["/bin/bash", "-c", "source /app/miniconda3/etc/profile.d/conda.sh && conda activate sam-3d-body && python demo.py --image_folder /app/input --output_folder /app/output --checkpoint_path ./checkpoints/sam-3d-body-dinov3/model.ckpt --mhr_path ./checkpoints/sam-3d-body-dinov3/assets/mhr_model.pt"]
 
 # Test CUDA availability with Python (using the conda environment)
 # CMD ["/bin/bash", "-c", "source /app/miniconda3/etc/profile.d/conda.sh && conda activate sam-3d-body && python -c \"import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'CUDA device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \\\"None\\\"}')\""]
