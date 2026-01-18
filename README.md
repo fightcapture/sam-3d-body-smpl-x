@@ -30,9 +30,7 @@ Get your Lambda Labs API key from https://cloud.lambda.ai/api-keys/cloud-api
 nohup bash -c '
   INSTANCE_ID=$(cloud-init query -f "{{instance_id}}")
   LL_API_KEY=...
-
   sudo docker run --gpus all -v /home/ubuntu/gdrive-fightcapture/input:/app/input -v /home/ubuntu/gdrive-fightcapture/output:/app/output sam-3d-body-smpl-x
-
   curl -u "$LL_API_KEY:" -X POST https://cloud.lambda.ai/api/v1/instance-operations/terminate \
   -d "{\"instance_ids\": [\"$INSTANCE_ID\"]}" \
   -H "Content-Type: application/json"
