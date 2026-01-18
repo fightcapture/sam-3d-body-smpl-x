@@ -91,6 +91,11 @@ def main(args):
             use_mask=args.use_mask,
         )
 
+        # Dump outputs to text file
+        output_txt_path = f"{output_folder}/{os.path.basename(image_path)[:-4]}.txt"
+        with open(output_txt_path, "w") as f:
+            f.write(str(outputs))
+
         img = cv2.imread(image_path)
         rend_img = visualize_sample_together(img, outputs, estimator.faces)
         cv2.imwrite(
