@@ -66,6 +66,8 @@ RUN echo "conda activate sam-3d-body" >> ~/.bashrc
 # RUN git clone https://github.com/facebookresearch/sam-3d-body.git
 # WORKDIR /app/sam-3d-body
 
+COPY . /app/
+
 ARG HF_TOKEN
 RUN source /app/miniconda3/etc/profile.d/conda.sh && \
     conda activate sam-3d-body && \
