@@ -7,23 +7,44 @@ RUN apt update && apt upgrade -y && apt install -y git wget curl build-essential
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     bash Miniconda3-latest-Linux-x86_64.sh -b -p /app/miniconda3 && \
     rm Miniconda3-latest-Linux-x86_64.sh
+
 ENV PATH="/app/miniconda3/bin:${PATH}"
+
 RUN conda init bash && \
     conda config --set auto_activate_base true && \
-    echo "conda config --set channel_priority strict" >> ~/.bashrc
-RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
-RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+    conda config --set channel_priority strict
 
-RUN pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+# Accept conda ToS
+RUN conda config --set tos_accepted true
 
-RUN conda create -n sam-3d-body python=3.11 -y
-RUN conda activate sam-3d-body
+# Create conda environment (disable safety checks for faster build)
+RUN conda create -n sam-3d-body python=3.11 -y --solver=classic
 
-RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-RUN pip install pytorch-lightning pyrender opencv-python yacs scikit-image einops timm dill pandas rich hydra-core hydra-submitit-launcher hydra-colorlog pyrootutils webdataset chump networkx==3.2.1 roma joblib seaborn wandb appdirs appnope ffmpeg cython jsonlines pytest xtcocotools loguru optree fvcore black pycocotools tensorboard huggingface_hub
-RUN pip install 'git+https://github.com/facebookresearch/detectron2.git@a1ce2f9' --no-build-isolation --no-deps
-RUN pip install git+https://github.com/microsoft/MoGe.git
+# Activate environment and install packages
+RUN echo "source /app/miniconda3/etc/profile.d/conda.sh && conda activate sam-3d-body" >> ~/.bashrc
 
+# Install PyTorch with CUDA 12.1 in the conda environment
+RUN source /app/miniconda3/etc/profile.d/conda.sh && \
+    conda activate sam-3d-body && \
+    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
-# Test CUDA availability with Python
-CMD ["python3", "-c", "import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'CUDA device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"None\"}')"]
+# Install other dependencies
+RUN source /app/miniconda3/etc/profile.d/conda.sh && \
+    conda activate sam-3d-body && \
+    pip install pytorch-lightning pyrender opencv-python yacs scikit-image einops timm dill pandas rich hydra-core hydra-submitit-launcher hydra-colorlog pyrootutils webdataset chump networkx==3.2.1 roma joblib seaborn wandb appdirs appnope ffmpeg cython jsonlines pytest xtcocotools loguru optree fvcore black pycocotools tensorboard huggingface_hub
+
+# Install detectron2
+RUN source /app/miniconda3/etc/profile.d/conda.sh && \
+    conda activate sam-3d-body && \
+    pip install 'git+https://github.com/facebookresearch/detectron2.git@a1ce2f9' --no-build-isolation --no-deps
+
+# Install MoGe
+RUN source /app/miniconda3/etc/profile.d/conda.sh && \
+    conda activate sam-3d-body && \
+    pip install git+https://github.com/microsoft/MoGe.git
+
+# Make conda environment activate on shell start
+RUN echo "conda activate sam-3d-body" >> ~/.bashrc
+
+# Test CUDA availability with Python (using the conda environment)
+CMD ["/bin/bash", "-c", "source /app/miniconda3/etc/profile.d/conda.sh && conda activate sam-3d-body && python -c \"import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'CUDA device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \\\"None\\\"}')\""]
