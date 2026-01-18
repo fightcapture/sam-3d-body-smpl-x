@@ -40,4 +40,5 @@ nohup bash << 'EOF' > job.log 2>&1 &
   INSTANCE_ID=$(curl --request GET --url "https://cloud.lambda.ai/api/v1/instances" --header "accept: application/json" --user "$LL_API_KEY:" | jq -r ".data[0].id")
   sudo docker run --gpus all -v /home/ubuntu/gdrive-fightcapture/input:/app/input -v /home/ubuntu/gdrive-fightcapture/output:/app/output sam-3d-body-smpl-x  
   curl -u "$LL_API_KEY:" -X POST https://cloud.lambda.ai/api/v1/instance-operations/terminate -d "{\"instance_ids\": [\"$INSTANCE_ID\"]}" -H "Content-Type: application/json"
-EOF```
+EOF
+```
