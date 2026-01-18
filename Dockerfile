@@ -14,9 +14,6 @@ RUN conda init bash && \
     conda config --set auto_activate_base true && \
     conda config --set channel_priority strict
 
-# Accept conda ToS
-RUN conda config --set tos_accepted true
-
 # Create conda environment (disable safety checks for faster build)
 RUN conda create -n sam-3d-body python=3.11 -y --solver=classic
 
