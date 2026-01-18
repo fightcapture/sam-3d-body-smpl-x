@@ -94,10 +94,7 @@ def main(args):
         # Dump outputs to text file
         output_txt_path = f"{output_folder}/{os.path.basename(image_path)[:-4]}.txt"
         with open(output_txt_path, "w") as f:
-            if outputs and "pred_keypoints_3d" in outputs:
-                for kp in outputs["pred_keypoints_3d"]:
-                    f.write(np.array2string(kp.cpu().numpy() if torch.is_tensor(kp) else kp, separator=', '))
-                    f.write("\n")
+            f.write(str(outputs))
 
         img = cv2.imread(image_path)
         rend_img = visualize_sample_together(img, outputs, estimator.faces)
