@@ -55,6 +55,11 @@ RUN source /app/miniconda3/etc/profile.d/conda.sh && \
     conda activate sam-3d-body && \
     pip install huggingface_hub
 
+# Install pyglet version compatible with headless rendering
+RUN source /app/miniconda3/etc/profile.d/conda.sh && \
+    conda activate sam-3d-body && \
+    pip install pyglet==1.5.27
+
 # Make conda environment activate on shell start
 RUN echo "conda activate sam-3d-body" >> ~/.bashrc
 
@@ -66,5 +71,14 @@ RUN source /app/miniconda3/etc/profile.d/conda.sh && \
     conda activate sam-3d-body && \
     hf download --token ${HF_TOKEN} facebook/sam-3d-body-dinov3 --local-dir checkpoints/sam-3d-body-dinov3
 
+RUN mkdir images outputs
+RUN wget -P images https://www.fisu.net/app/uploads/2023/08/artistic_gym.jpg
+
+# Set environment for headless rendering
+ENV PYOPENGL_PLATFORM=egl
+ENV MESA_GL_VERSION_OVERRIDE=4.1
+
+CMD ["/bin/bash", "-c", "source /app/miniconda3/etc/profile.d/conda.sh && conda activate sam-3d-body && python demo.py --image_folder images --output_folder outputs --checkpoint_path ./checkpoints/sam-3d-body-dinov3/model.ckpt --mhr_path ./checkpoints/sam-3d-body-dinov3/assets/mhr_model.pt"]
+
 # Test CUDA availability with Python (using the conda environment)
-CMD ["/bin/bash", "-c", "source /app/miniconda3/etc/profile.d/conda.sh && conda activate sam-3d-body && python -c \"import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'CUDA device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \\\"None\\\"}')\""]
+# CMD ["/bin/bash", "-c", "source /app/miniconda3/etc/profile.d/conda.sh && conda activate sam-3d-body && python -c \"import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'CUDA device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \\\"None\\\"}')\""]
