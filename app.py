@@ -94,11 +94,13 @@ def main(args):
         # Dump pred_keypoints_3d for each detected person to separate files
         base_name = os.path.basename(image_path)[:-4]
         if outputs and "pred_keypoints_3d" in outputs:
-            for idx, kp in enumerate(outputs["pred_keypoints_3d"]):
+            for idx, output in enumerate(outputs):
                 output_txt_path = f"{output_folder}/{base_name}_{idx:03d}.txt"
                 with open(output_txt_path, "w") as f:
+                    kp = output["pred_keypoints_3d"]
                     kp_array = kp.cpu().numpy() if torch.is_tensor(kp) else kp
-                    f.write(np.array2string(kp_array, separator=', '))
+                    for point in kp_array:
+                        f.write(",".join(map(str, point.flatten())) + "\n")
 
         img = cv2.imread(image_path)
         rend_img = visualize_sample_together(img, outputs, estimator.faces)
