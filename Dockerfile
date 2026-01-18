@@ -64,8 +64,7 @@ WORKDIR /app/sam-3d-body
 ARG HF_TOKEN
 RUN source /app/miniconda3/etc/profile.d/conda.sh && \
     conda activate sam-3d-body && \
-    hf login --token ${HF_TOKEN} && \
-    hf download facebook/sam-3d-body-dinov3 --local-dir checkpoints/sam-3d-body-dinov3
+    hf download --token ${HF_TOKEN} facebook/sam-3d-body-dinov3 --local-dir checkpoints/sam-3d-body-dinov3
 
 # Test CUDA availability with Python (using the conda environment)
 CMD ["/bin/bash", "-c", "source /app/miniconda3/etc/profile.d/conda.sh && conda activate sam-3d-body && python -c \"import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'CUDA device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \\\"None\\\"}')\""]
