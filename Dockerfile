@@ -63,10 +63,10 @@ RUN source /app/miniconda3/etc/profile.d/conda.sh && \
 # Make conda environment activate on shell start
 RUN echo "conda activate sam-3d-body" >> ~/.bashrc
 
-# RUN git clone https://github.com/facebookresearch/sam-3d-body.git
-# WORKDIR /app/sam-3d-body
-
-COPY . /app/
+RUN git clone https://github.com/facebookresearch/sam-3d-body.git
+COPY ./sam-3d-body /app/
+COPY ./app.py /app/
+WORKDIR /app/sam-3d-body
 
 ARG HF_TOKEN
 RUN source /app/miniconda3/etc/profile.d/conda.sh && \
@@ -77,7 +77,7 @@ RUN source /app/miniconda3/etc/profile.d/conda.sh && \
 ENV PYOPENGL_PLATFORM=egl
 ENV MESA_GL_VERSION_OVERRIDE=4.1
 
-CMD ["/bin/bash", "-c", "source /app/miniconda3/etc/profile.d/conda.sh && conda activate sam-3d-body && python /app/demo.py --image_folder /app/input --output_folder /app/output --checkpoint_path ./checkpoints/sam-3d-body-dinov3/model.ckpt --mhr_path ./checkpoints/sam-3d-body-dinov3/assets/mhr_model.pt"]
+CMD ["/bin/bash", "-c", "source /app/miniconda3/etc/profile.d/conda.sh && conda activate sam-3d-body && python app.py --image_folder /app/input --output_folder /app/output --checkpoint_path ./checkpoints/sam-3d-body-dinov3/model.ckpt --mhr_path ./checkpoints/sam-3d-body-dinov3/assets/mhr_model.pt"]
 
 # Test CUDA availability with Python (using the conda environment)
 # CMD ["/bin/bash", "-c", "source /app/miniconda3/etc/profile.d/conda.sh && conda activate sam-3d-body && python -c \"import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'CUDA device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \\\"None\\\"}')\""]
