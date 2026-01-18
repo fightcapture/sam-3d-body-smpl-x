@@ -71,9 +71,6 @@ RUN source /app/miniconda3/etc/profile.d/conda.sh && \
     conda activate sam-3d-body && \
     hf download --token ${HF_TOKEN} facebook/sam-3d-body-dinov3 --local-dir checkpoints/sam-3d-body-dinov3
 
-RUN mkdir images outputs
-RUN wget -P images https://www.fisu.net/app/uploads/2023/08/artistic_gym.jpg
-
 # Set environment for headless rendering
 ENV PYOPENGL_PLATFORM=egl
 ENV MESA_GL_VERSION_OVERRIDE=4.1
